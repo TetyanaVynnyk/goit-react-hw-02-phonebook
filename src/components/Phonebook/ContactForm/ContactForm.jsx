@@ -5,22 +5,15 @@ import PropTypes from 'prop-types';
 
 import styles from './contactForm.module.css';
 
-import initialContacts from '../../../data.json';
-
 class ContactForm extends Component {
   state = {
-    contacts: initialContacts,
     name: '',
     number: '',
   };
 
   handleChange = e => {
-    const newName = e.target.form[0].value;
-    const newPhone = e.target.form[1].value;
-    this.setState({
-      name: newName,
-      number: newPhone,
-    });
+    const { name, value } = e.currentTarget;
+    this.setState({ [name]: value });
   };
 
   handleSubmit = e => {
@@ -30,7 +23,7 @@ class ContactForm extends Component {
   };
 
   render() {
-    const { name, number } = this.state;
+    
     return (
       <form className={styles.formWrapper} onSubmit={this.handleSubmit}>
         <label className={styles.inputTitle} htmlFor="nameId">
@@ -39,12 +32,12 @@ class ContactForm extends Component {
         <input
           className={styles.formInput}
           type="text"
-          name={name}
+          name="name"
           nameid={nanoid()}
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
-          value={name}
+          value={this.state.name}
           onChange={this.handleChange}
         />
         <label className={styles.inputTitle} htmlFor="phoneId">
@@ -53,12 +46,12 @@ class ContactForm extends Component {
         <input
           className={styles.formInput}
           type="tel"
-          name={number}
+          name="number"
           phoneid={nanoid()}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required
-          value={number}
+          value={this.state.number}
           onChange={this.handleChange}
         />
         <button className={styles.btn} type="submit">
@@ -71,14 +64,4 @@ class ContactForm extends Component {
 
 export default ContactForm;
 
-ContactForm.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-  handleSubmit: PropTypes.func,
-  handleChange: PropTypes.func,
-};
+ContactForm.propTypes = { onSubmit: PropTypes.func.isRequired };

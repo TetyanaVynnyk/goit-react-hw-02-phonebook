@@ -1,7 +1,6 @@
 import { Component } from 'react';
 
 import { nanoid } from 'nanoid';
-import PropTypes from 'prop-types';
 
 import ContactForm from './ContactForm';
 import ContactList from './ContactList';
@@ -31,6 +30,15 @@ class Phonebook extends Component {
     this.setState({ filter: e.currentTarget.value });
   };
 
+  getVisibleContacts = () => {
+    const { filter, contacts } = this.state;
+    const normalizedFilter = filter.toLowerCase();
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(normalizedFilter)
+    );
+  };
+
   deleteContact = contactId => {
     this.setState(prevState => ({
       contacts: prevState.contacts.filter(contact => contact.id !== contactId),
@@ -38,40 +46,32 @@ class Phonebook extends Component {
   };
 
   render() {
-    const { contacts, filter } = this.state;
-
-    const normalizedFilter = filter.toLowerCase();
-    const filteredContacts = contacts.filter(contact =>
-      contact.name.toLowerCase().includes(normalizedFilter)
-    );
+    const { filter } = this.state;
+    const visibleContact = this.getVisibleContacts();
+    let div;
+    if (visibleContact.length === 0) {
+      div = <p>You have no contacts</p>;
+    } else {
+      div = (
+        <div>
+          <Filter value={filter} changeFilter={this.changeFilter} />
+          <ContactList
+            contacts={visibleContact}
+            onDeleteContacts={this.deleteContact}
+          />
+        </div>
+      );
+    }
 
     return (
       <div>
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.addContact} />
         <h2>Contacts</h2>
-        <Filter value={filter} changeFilter={this.changeFilter} />
-        <ContactList
-          contacts={filteredContacts}
-          onDeleteContacts={this.deleteContact}
-        />
+        {div}
       </div>
     );
   }
 }
 
 export default Phonebook;
-
-Phonebook.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ),
-  filter: PropTypes.string,
-  addContact: PropTypes.func,
-  deleteContact: PropTypes.func,
-  changeFilter: PropTypes.func,
-};
