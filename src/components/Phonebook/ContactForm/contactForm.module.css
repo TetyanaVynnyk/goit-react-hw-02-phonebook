@@ -14,8 +14,17 @@
     margin-bottom: 10px;
 }
 
+.formInput:hover {
+    border-color: aqua;
+}
+
 .btn {
     width: 25vh;
     font-weight: bold;
     cursor: pointer;
+}
+
+.btn:hover,
+.btn:focus {
+    background-color: aqua;
 }
