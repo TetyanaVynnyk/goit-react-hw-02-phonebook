@@ -48,27 +48,23 @@ class Phonebook extends Component {
   render() {
     const { filter } = this.state;
     const visibleContact = this.getVisibleContacts();
-    let div;
-    if (visibleContact.length === 0) {
-      div = <p>You have no contacts</p>;
-    } else {
-      div = (
-        <div>
-          <Filter value={filter} changeFilter={this.changeFilter} />
-          <ContactList
-            contacts={visibleContact}
-            onDeleteContacts={this.deleteContact}
-          />
-        </div>
-      );
-    }
 
     return (
       <div>
         <h1>Phonebook</h1>
         <ContactForm onSubmit={this.addContact} />
         <h2>Contacts</h2>
-        {div}
+        {visibleContact.length ? (
+          <div>
+            <Filter value={filter} changeFilter={this.changeFilter} />
+            <ContactList
+              contacts={visibleContact}
+              onDeleteContacts={this.deleteContact}
+            />
+          </div>
+        ) : (
+          <p>You have no contacts</p>
+        )}
       </div>
     );
   }
